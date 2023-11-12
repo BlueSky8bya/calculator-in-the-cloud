@@ -35,6 +35,8 @@ public class CalcClientEx {
 				
 				String inputMessage = in.readLine();// 서버로부터 계산 결과 수신
 				System.out.println("계산 결과: " + inputMessage);
+				
+				//socket.close();
 			}
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
