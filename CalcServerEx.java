@@ -40,13 +40,32 @@ public class CalcServerEx {
 
 	public static void main(String[] args) {
 		
+		// 서버의 정보를 저장해 둔 "server_info.txt"라는 파일 읽을 준비
+		File file = new File("server_info.txt");
+		FileReader fileReader = null;
+		
 		BufferedReader in = null;
 		BufferedWriter out = null;
 		ServerSocket listener = null;
 		Socket socket = null;
 		
 		try {
-			listener = new ServerSocket(9999);	// 서버 소켓 생성
+			
+			fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			
+			// 파일에 있는 값 한 줄을 읽어서 " "단위로 나누기
+			String line = bufferedReader.readLine();
+			StringTokenizer st = new StringTokenizer(line, " ");
+			
+			bufferedReader.close();
+			
+			//IP adress를 지나고 바로 port number를 저장한다
+			st.nextToken();
+			int port = Integer.parseInt(st.nextToken());
+
+
+			listener = new ServerSocket(port);	// 서버 소켓 생성
 			System.out.println("연결을 기다리고 있습니다......");
 			
 			socket = listener.accept();	// 클라이언트로부터 연결 요청 대기
@@ -69,8 +88,6 @@ public class CalcServerEx {
 				out.write(res + "\n");	// 계산 결과 문자열 전송
 				out.flush();
 				
-				//socket.close();
-				//listener.close();
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -83,6 +100,14 @@ public class CalcServerEx {
 			} 
 			catch (IOException e) {
 				System.out.println("클라이언트와 채팅 중 오류가 발생했습니다.");
+			} finally {
+				try {
+					if(fileReader != null)
+						fileReader.close();
+				} 
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 

@@ -8,6 +8,9 @@ public class CalcClientEx {
 
 	public static void main(String[] args) {
 		
+		File file = new File("server_info.txt");
+		FileReader fileReader = null;
+		
 		BufferedReader in = null;
 		BufferedWriter out = null;
 		Socket socket = null;
@@ -15,7 +18,19 @@ public class CalcClientEx {
 		
 		try {
 			
-			socket = new Socket("localhost", 9999);
+			fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			
+			String line = bufferedReader.readLine();
+			StringTokenizer st = new StringTokenizer(line, " ");
+			
+			bufferedReader.close();
+			
+			String IPadress = st.nextToken();
+			int port = Integer.parseInt(st.nextToken());
+			
+			
+			socket = new Socket(IPadress, port);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			
@@ -36,8 +51,8 @@ public class CalcClientEx {
 				String inputMessage = in.readLine();// 서버로부터 계산 결과 수신
 				System.out.println("계산 결과: " + inputMessage);
 				
-				//socket.close();
 			}
+
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -46,10 +61,19 @@ public class CalcClientEx {
 				
 				if(socket != null)
 					socket.close();	//클라이언트 소켓 닫기
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				System.out.println("서버와 채팅 중 오류가 발생했습니다.");
+			} finally {
+				try {
+					if(fileReader != null)
+						fileReader.close();						
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 			}
+			
 		}
 
 	}
