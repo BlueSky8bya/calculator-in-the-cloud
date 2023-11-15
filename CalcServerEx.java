@@ -12,36 +12,55 @@ public class CalcServerEx {
 		
 		StringTokenizer st = new StringTokenizer(exp, " ");
 		
-		if(st.countTokens() != 3)
-			return "error";
-		
+		if(st.countTokens() < 3)
+			// 인자가 너무 적다
+			return "C102";
+		if(st.countTokens() > 3)
+			// 인자가 너무 많다
+			return "C456";
+			
 		String res = "";
+		String opcode = st.nextToken().toUpperCase();
+		System.out.println(opcode);
 		
-		double op1 = Double.parseDouble(st.nextToken());
-		String opcode = st.nextToken();
-		double op2 = Double.parseDouble(st.nextToken());
+
+		double op1;
+		double op2;
 		
+		try {
+			op1 = Double.parseDouble(st.nextToken());
+			op2 = Double.parseDouble(st.nextToken());
+		} catch (Exception e) {
+			return "C444";
+		}
+			
 		switch(opcode) {
-		case "+":
+		case "ADD":
 			res = Double.toString(op1+op2);
 			break;
-		case "-":
+		case "SUB":
 			res = Double.toString(op1-op2);
 			break;
-		case "*":
+		case "MUL":
 			res = Double.toString(op1*op2);
 			break;
-		case "/":
-			res = Double.toString(op1/op2);
+		case "DIV":
+			if(op2 != 0)
+				res = Double.toString(op1/op2);
+			else
+				return "C510";
 			break;
 		default:
-			res = "error";
+			// 연산자 오타
+			res = "C404";
 		}
 		return res;
+		
 	}
 
 	public static void main(String[] args) throws Exception {
 		
+		//src/_01_SocketProgramming/server_info.txt, e.g.) "localhost 9999" ->띄어쓰기로 구분되어있음.
 		File file = new File("src/_01_SocketProgramming/server_info.txt");
 		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -97,7 +116,7 @@ public class CalcServerEx {
 					String inputMessage = in.readLine();
 					
 					if(inputMessage.equalsIgnoreCase("bye")) {
-						System.out.println("클라이언트에서 연결을 종료하였음");
+						System.out.println("클라이언트에서 연결 종료");
 						break;	// "bye"를 받으면 연결 종료
 					}
 					

@@ -17,6 +17,7 @@ public class CalcClientEx {
 		
 		try {
 			
+			//src/_01_SocketProgramming/server_info.txt, e.g.) "localhost 9999" ->띄어쓰기로 구분되어있음.
 			File file = new File("src/_01_SocketProgramming/server_info.txt");
 			
 			fileReader = new FileReader(file);
@@ -36,7 +37,9 @@ public class CalcClientEx {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			
 			while(true) {
-				System.out.println("계산식(빈칸으로 띄어 입력, 예: 24 + 42)>>");	// 프롬프트
+				// 프롬프트
+				System.out.println("ADD: (+), SUB: (-), MUL: (*), DIV: (/)");
+				System.out.println("계산식(연산자 숫자 숫자 순서, 빈칸으로 띄어서 입력, 예: DIV 8 2)");
 				
 				String outputMessage = scanner.nextLine();// 키보드에서 수식 읽기
 				
@@ -50,8 +53,19 @@ public class CalcClientEx {
 				out.flush();
 				
 				String inputMessage = in.readLine();// 서버로부터 계산 결과 수신
-				System.out.println("계산 결과: " + inputMessage);
-				
+				if(inputMessage.equals("C102"))
+					System.out.println("Error Code: 102\nError Message: 인자가 너무 적음");
+				else if(inputMessage.equals("C404"))
+					System.out.println("Error Code: 404\nError Message: 연산자 오타");
+				else if(inputMessage.equals("C444"))
+					System.out.println("Error Code: 444\nError Message: 잘못된 입력 형식");
+				else if(inputMessage.equals("C456"))
+					System.out.println("Error Code: 456\nError Message: 인자가 너무 많음");
+				else if(inputMessage.equals("C510"))
+					System.out.println("Error Code: 510\nError Message: 0으로 나눔");
+				else
+					System.out.println("계산 결과: " + inputMessage);
+				System.out.println("-------------------------------------------\n");
 			}
 
 		} catch(IOException e) {
