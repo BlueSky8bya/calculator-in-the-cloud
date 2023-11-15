@@ -8,7 +8,6 @@ public class CalcClientEx {
 
 	public static void main(String[] args) {
 		
-		File file = new File("server_info.txt");
 		FileReader fileReader = null;
 		
 		BufferedReader in = null;
@@ -17,6 +16,8 @@ public class CalcClientEx {
 		Scanner scanner = new Scanner(System.in);
 		
 		try {
+			
+			File file = new File("src/_01_SocketProgramming/server_info.txt");
 			
 			fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -57,21 +58,23 @@ public class CalcClientEx {
 			System.out.println(e.getMessage());
 		} finally {
 			try {
-				scanner.close();
-				
-				if(socket != null)
-					socket.close();	//클라이언트 소켓 닫기
+				socket.close();	//클라이언트 소켓 닫기
 			} catch(IOException e) {
 				System.out.println("서버와 채팅 중 오류가 발생했습니다.");
 			} finally {
 				try {
 					if(fileReader != null)
-						fileReader.close();						
-				}
-				catch (IOException e)
-				{
+						fileReader.close();
+					if(in != null)
+						in.close();
+					if(out != null)
+						out.close();
+				} 
+				catch (IOException e) {
 					e.printStackTrace();
 				}
+
+				scanner.close();
 			}
 			
 		}
