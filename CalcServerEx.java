@@ -31,6 +31,7 @@ public class CalcServerEx {
 			op1 = Double.parseDouble(st.nextToken());
 			op2 = Double.parseDouble(st.nextToken());
 		} catch (Exception e) {
+			// double형으로 입력받는 데 문제가 있는 경우
 			return "C444";
 		}
 			
@@ -48,6 +49,7 @@ public class CalcServerEx {
 			if(op2 != 0)
 				res = Double.toString(op1/op2);
 			else
+				// 0으로 나누는 경우
 				return "C510";
 			break;
 		default:
